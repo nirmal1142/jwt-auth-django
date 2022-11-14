@@ -12,16 +12,23 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import dotenv_values
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables
+env = dotenv_values(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = env['SECRET_KEY']
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-su*is@rhst_m=58#)4gq@*=&+62+$1^u2ecw9*redwjw7wlg4^"
+# SECRET_KEY = "django-insecure-su*is@rhst_m=58#)4gq@*=&+62+$1^u2ecw9*redwjw7wlg4^"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +47,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
     'corsheaders',
-    'blogMasterApi',
     'account'
 ]
 
@@ -56,7 +62,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "blogMaster.urls"
+ROOT_URLCONF = "jwtAuth.urls"
 
 TEMPLATES = [
     {
@@ -74,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "blogMaster.wsgi.application"
+WSGI_APPLICATION = "jwtAuth.wsgi.application"
 
 
 # Database
@@ -91,10 +97,10 @@ WSGI_APPLICATION = "blogMaster.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": 'blog-master',
-        "USER":'postgres',
-        "PASSWORD":"1234",
-        "HOST":"localhost"
+        "NAME": env['DB_NAME'],
+        "USER": env['DB_USER'],
+        "PASSWORD": env['DB_PASSWORD'],
+        "HOST": env['DB_HOST'],
     }
 }
 

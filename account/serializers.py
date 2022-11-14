@@ -1,10 +1,9 @@
 from rest_framework import serializers
-from account.models import User, Products, Category
+from account.models import User
 from django.utils.encoding import smart_str , force_bytes , DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode , urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from account.utils import Util
-from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -104,46 +103,3 @@ class UserPasswordResetSerializer(serializers.Serializer):
         except DjangoUnicodeDecodeError as identifier:
             PasswordResetTokenGenerator().check_token(user,token)
             raise serializers.ValidationError('Token is invalid')
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-
-class CategoryCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-        extra_kwargs = {'created_at': {'read_only': True}}
-
-
-class ProductDetailSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Products
-        fields = ['id','name','price','description','image','category','created_at','updated_at','is_active','user_id']
-        depth = 1
-
-class ProductCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Products
-        fields = ['id','name','price','description','image','category','user']
-        # extra_kwargs = {
-        #     'user': {'read_only': True}
-        # }
-
-class ProductUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Products
-        fields = ['id','name','price','description','image','category']
-        extra_kwargs = {
-            'user': {'read_only': True}
-        }
-
-class ProductGetByCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Products
-        fields = ['id','name','price','description','image','category']
-        depth = 1
